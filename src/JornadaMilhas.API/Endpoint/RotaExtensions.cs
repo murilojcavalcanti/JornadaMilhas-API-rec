@@ -27,20 +27,15 @@ public static class RotaExtensions
             {
                 return Results.Problem($"Erro:{rota.Erros} => {ex.Message}");
             }
-           
+
         }).WithTags("Rota Viagem").WithSummary("Adiciona uma nova rota de viagem.").WithOpenApi().RequireAuthorization();
 
-        app.MapGet("/rota-viagem", async ([FromServices] RotaConverter converter, [FromServices] EntityDAL<Rota> entityDAL) =>
+        app.MapGet("/rota-viagem/{id}", ([FromServices] RotaConverter converter, [FromServices] EntityDAL<Rota> entityDAL, int id) =>
         {
-            return Results.Ok(converter.EntityListToResponseList(await entityDAL.Listar()));
-        }).WithTags("Rota Viagem").WithSummary("Listagem de rotas de viagem cadastradas.").WithOpenApi().RequireAuthorization(); ;
-
-        app.MapGet("/rota-viagem/{id}", ([FromServices] RotaConverter converter, [FromServices] EntityDAL<Rota> entityDAL,int id) =>
-        {
-            return Results.Ok(converter.EntityToResponse(entityDAL.RecuperarPor(a=>a.Id==id)!));
+            return Results.Ok(converter.EntityToResponse(entityDAL.RecuperarPor(a => a.Id == id)!));
         }).WithTags("Rota Viagem").WithSummary("Obtem rota de viagem por id.").WithOpenApi().RequireAuthorization();
 
-        app.MapDelete("/rota-viagem/{id}", async([FromServices] RotaConverter converter, [FromServices] EntityDAL<Rota> entityDAL, int id) =>
+        app.MapDelete("/rota-viagem/{id}", async ([FromServices] RotaConverter converter, [FromServices] EntityDAL<Rota> entityDAL, int id) =>
         {
             var rota = entityDAL.RecuperarPor(a => a.Id == id);
             if (rota is null)
@@ -53,7 +48,7 @@ public static class RotaExtensions
 
         app.MapPut("/rota-viagem", async ([FromServices] RotaConverter converter, [FromServices] EntityDAL<Rota> entityDAL, [FromBody] RotaEditRequest rotaReq) =>
         {
-           var rotaAtualizada = entityDAL.RecuperarPor(a => a.Id == rotaReq.id);
+            var rotaAtualizada = entityDAL.RecuperarPor(a => a.Id == rotaReq.id);
             var rotaConvertida = converter.RequestToEntity(rotaReq);
             if (rotaAtualizada is null)
             {
@@ -66,7 +61,7 @@ public static class RotaExtensions
 
         }).WithTags("Rota Viagem").WithSummary("Atualiza uma rota de viagem.").WithOpenApi().RequireAuthorization();
 
-        app.MapGet("/rota-viagem/{pagina}/{tamanhoPorPagina}", async ([FromServices] RotaConverter converter, [FromServices] EntityDAL<Rota> entityDAL, int pagina, int tamanhoPorPagina) =>
+        app.MapGet("/rota-viagem/", async ([FromServices] RotaConverter converter, [FromServices] EntityDAL<Rota> entityDAL, [FromQuery] int pagina = 1, [FromQuery] int tamanhoPorPagina = 25) =>
         {
             var rotas = await entityDAL.ListarPaginado(pagina, tamanhoPorPagina);
             if (rotas is null) return Results.NotFound();

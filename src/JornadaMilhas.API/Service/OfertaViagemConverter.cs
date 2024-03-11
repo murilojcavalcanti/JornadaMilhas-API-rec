@@ -34,7 +34,7 @@ public class OfertaViagemConverter
 
     public OfertaViagemResponse EntityToResponse(OfertaViagem ofertaViagem)
     {
-        return new OfertaViagemResponse(ofertaViagem.Id, rotaConverter.EntityToResponse(ofertaViagem.Rota), periodoConverter.EntityToResponse(ofertaViagem.Periodo), ofertaViagem.Preco);
+        return new OfertaViagemResponse(ofertaViagem.Id, rotaConverter.EntityToResponse(ofertaViagem.Rota), periodoConverter.EntityToResponse(ofertaViagem.Periodo), ofertaViagem.Preco,ofertaViagem.Desconto);
     }
     public ICollection<OfertaViagemResponse> EntityListToResponseList(IEnumerable<OfertaViagem> ofertas)
     {
