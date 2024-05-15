@@ -152,5 +152,6 @@ async Task AdicionaRegistrosTabela(IServiceProvider serviceProvider)
         }
     }
 }
-
+//Configuração para testes
+public partial class Program { }
 
